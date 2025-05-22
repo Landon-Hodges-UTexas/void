@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whispers</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background-color: black;
+      color: white;
+      font-family: "Times New Roman", serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #userInput {
+      background: transparent;
+      border: none;
+      color: white;
+      font-family: "Times New Roman", serif;
+      font-size: 1.5rem;
+      outline: none;
+      caret-color: white;
+      width: 80%;
+      text-align: center;
+    }
+
+    #userInput::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    #responseBox {
+      margin-bottom: 2rem;
+      font-family: "Times New Roman", serif;
+      font-style: italic;
+      max-width: 80%;
+      text-align: center;
+      white-space: pre-wrap;
+    }
+
+    /* Flashing cursor effect via fake element */
+    #userInput::after {
+      content: '|';
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="responseBox"></div>
+  <input id="userInput" type="text" placeholder="speak..." autocomplete="off" />
+
+  <script>
+    const input = document.getElementById("userInput");
+    const box = document.getElementById("responseBox");
+
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const message = input.value;
+        input.value = "";
+
+        fetch("http://localhost:8000/void", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message })
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          box.innerText = data.response;
+        });
+      }
+    });
+  </script>
+</body>
+</html>
