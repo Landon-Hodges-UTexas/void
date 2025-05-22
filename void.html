@@ -67,7 +67,7 @@
         const message = input.value;
         input.value = "";
 
-        fetch("http://localhost:8000/void", {
+        fetch("/void", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ message })
